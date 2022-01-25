@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package v1;
+import "google/protobuf/timestamp.proto";
+
+option go_package = "../v1";
+
+// 操作实体
+message ToDo {
+    int64 id = 1;
+    string title = 2;
+    string description = 3;
+    google.protobuf.Timestamp reminder = 4;
+}
+
+/* 请求与响应的增删改查
+ */
+
+/* 创建记录请求，插入记录
+ */
+message CreateRequest {
+    string api = 1;
+    ToDo todo = 2;  //插入对应的记录
+}
+/* 创建记录响应，回执
+ */
+message CreateResponse {
+    string api = 1;
+    int64 id = 2;  //创建请求的响应回执，返回插入记录的id
+}
+
+/* 读取记录请求，读取记录
+ */
+message ReadRequest {
+    string api = 1;
+    int64 id = 2;  // 读取该主键对应的记录
+}
+/* 读取记录响应，返回该条记录
+ */
+message ReadResponse {
+    string api = 1;
+    ToDo todo = 2;  //读取请求的响应，返回该条记录
+}
+
+/* 读取全部记录请求，读取全部记录
+ */
+message ReadAllRequest {
+    string api = 1;
+}
+/* 读取全部记录响应，返回所有记录
+ */
+message ReadAllResponse {
+    string api = 1;
+    repeated ToDo todos = 2;  //读取全部记录请求的响应，返回所有记录
+}
+
+/* 删除记录请求，删除记录
+ */
+message DeleteRequest {
+    string api = 1;
+    int64 id = 2;  //删除记录的对应主键
+}
+/* 删除记录响应，返回删除状态
+ */
+message DeleteResponse {
+    string api = 1;
+    bool status = 2;  //删除请求的响应回执，返回删除是否成功的状态
+}
+
+/* 更新记录请求，更新记录
+ */
+message UpdateRequest {
+    string api = 1;
+    ToDo todo = 2;  // 需要更新的记录
+}
+/* 更新记录响应，返回更新状态
+ */
+message UpdateResponse {
+    string api = 1;
+    bool status = 2;  //更新请求的响应，返回更新状态
+}
+
+service ToDoService {
+    rpc Create(CreateRequest) returns (CreateResponse);
+    rpc Delete(DeleteRequest) returns (DeleteResponse);
+    rpc Update(UpdateRequest) returns (UpdateResponse);
+    rpc Read(ReadRequest) returns (ReadResponse);
+    rpc ReadAll(ReadAllRequest) returns (ReadAllResponse);
+}
